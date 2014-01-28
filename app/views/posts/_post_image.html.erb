@@ -1,0 +1,38 @@
+
+<%= form_for(@post) do |f| %>
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved:</h2>
+
+      <ul>
+      <% @post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= hidden_field_tag  "user_id", current_user.id%>
+    <div id="file" class="tiny button round">Chose file</div>
+	<input type="file" name="file" />
+  </div>
+  <div class="actions">
+    <%= f.submit "Upload", :class=>"tiny success button" %>
+  </div>
+<% end %>
+<script type="text/javascript">
+
+var wrapper = $('<div/>').css({height:0,width:0,'overflow':'hidden'});
+var fileInput = $(':file').wrap(wrapper);
+
+fileInput.change(function(){
+    $this = $(this);
+    $('#file').text($this.val());
+})
+
+$('#file').click(function(){
+    fileInput.click();
+}).show();
+
+
+</script>

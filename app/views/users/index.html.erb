@@ -1,0 +1,175 @@
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <div class="row">
+ <!-- Nav Sidebar -->
+    <!-- This is source ordered to be pulled to the left on larger screens -->
+    <div class="large-3 columns ">
+      <div class="panel">
+        <a href="#">
+         <!--  <img src="http://placehold.it/300x240&text=[img]" />-->          
+          <% if !current_user.avatar.blank? %>
+            <%= image_tag current_user.avatar.url(:thumb) %>
+          <% else %>
+            <%= image_tag "default_avatar.png" %>
+          <% end %>
+        </a>
+        <h5><a href="#"><%= current_user.name.upcase%></a></h5>
+          <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
+          <section class="section">
+            <h5 class="title"><a href="/users/edit">Edit Profile</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 2</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 3</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 4</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 5</a></h5>
+          </section>
+          <section class="section">
+            <h5 class="title"><a href="#">Section 6</a></h5>
+          </section>
+        </div>
+ 
+      </div>
+    </div>
+    
+    <!-- Main Feed -->
+    <!-- This has been source ordered to come first in the markup (and on small devices) but to be to the right of the nav on larger screens -->
+    <div class="large-6 columns">
+ 
+      <!-- Feed Entry -->
+      <div class="row">
+        <div class="large-12 columns">
+          <div>
+            <a class="tab1">Update status</a> &nbsp;&nbsp;&nbsp;
+            <a class="tab2">Add Photos</a>
+          </div><br>
+          <div class="tab1_content"><%= render 'posts/form' %></div>
+          <div class="tab2_content"><%= render 'posts/post_image' %></div>  
+          <style type="text/css">
+            .tab2_content{
+              display: none;
+            }
+          </style> 
+          <script type="text/javascript">
+            $('.tab1').click(function(){
+              $('.tab1_content').show();
+              $('.tab2_content').hide();
+            });
+            $('.tab2').click(function(){
+              $('.tab1_content').hide();
+              $('.tab2_content').show();
+            });
+          </script>       
+        </div>
+      </div>
+      <!-- End Feed Entry -->
+ 
+      <hr />
+ <% @post_all.each do |post| %>
+      <!-- Feed Entry -->
+      <div class="row" id="post<%= post.id %>">
+        <div class="large-2 columns small-3">
+          <!--<img src="http://placehold.it/80x80&text=[img]" />-->
+          <% if !post.user.avatar.blank? %>
+            <%= image_tag post.user.avatar.url(:small) %>
+          <% else %>
+            <%= image_tag "default_avatar.png", :style=>"width:100px; height:100px" %>
+          <% end %>
+        </div>
+        <div class="large-10 columns">
+          <div>
+            <strong><%= post.user.name.upcase%>:</strong><span class="lbl"><%=post.content %></span>
+
+          </div>
+          <ul class="inline-list">
+            <li><a href="">Share</a></li>
+            <li><a  class="btn_<%=post.id %>">Comment</a></li>
+            <% if post.user == current_user %>
+              <li><a class="edt_<%=post.id %>">Edit</a></li>
+              <li ><a href="#" onclick="deleyte_post(<%=post.id %>)">Delete </a></li>
+            <% end %>
+          </ul>
+          <script>
+
+                $( ".btn_<%=post.id %>" ).click(function() {
+                  $( ".<%=post.id %>" ).toggle();
+                  $( ".post_<%=post.id %>" ).hide();
+                });
+
+                 $( ".edt_<%=post.id %>" ).click(function() {
+                  $( ".post_<%=post.id %>" ).toggle();
+                  $( ".<%=post.id %>" ).hide();
+                });
+               </script>
+            <ul class="post_<%=post.id %>" style="display:none">
+              <li class="inline-list">
+                <%= render 'posts/edit' %>
+              </li>
+            </ul>
+            <ul class="<%=post.id %>" style="display:none">
+              <li class="inline-list">
+                <script type="text/javascript">
+  $('.hid_ul_edit').click(function(){
+    $('.<%=post.id %>').hide();
+  });
+</script>
+                  <%= render 'comments/comment' %>
+              </li>
+            </ul> 
+        </div>
+         <hr />
+      </div>
+      <!-- End Feed Entry -->
+     
+  <% end %> 
+    </div>
+    
+    <script type="text/javascript">
+              $(document).ready(function() {
+                  $('.edit').click(function () {
+                      $('.lbl').hide();
+                      $('#input').show().focus();
+                  });
+                  
+                  $('#input').focusout(function() {
+                      var dad = $(this).parent();
+                      $(this).hide();
+                      dad.find('.lbl').show();
+                  });
+              });
+            </script>
+ <script>
+function deleyte_post(id){
+  $.ajax({
+    type: "POST",
+    url: "/posts/comment_destroy",
+    data: ({"id": id}),
+    success: function(data){
+     $("#post"+id).hide();
+
+    }
+  }); 
+}
+ </script>
+    <!-- Right Sidebar -->
+    <!-- On small devices this column is hidden -->
+    <aside class="large-3 columns hide-for-small">
+      <p>
+        <!--<img src="http://placehold.it/300x440&text=[ad]" />-->
+        <object type="application/x-shockwave-flash" id="fm_Monster_Crowd_300x250_485012344" name="fm_Monster_Crowd_300x250_485012344" class="flashmovie" data="http://www.copyboost.com/wp-content/uploads/2010/02/Monster_Crowd_300x250.swf" width="300" height="440"></object>
+      </p>
+      <p>
+        <!--<img src="http://placehold.it/300x440&text=[ad]" />-->
+        <object type="application/x-shockwave-flash" id="fm_progressive_nameyourprice_slider_flo_interactive_300x250_713398727" name="fm_progressive_nameyourprice_slider_flo_interactive_300x250_713398727" class="flashmovie" data="http://www.copyboost.com/wp-content/uploads/2010/02/progressive_nameyourprice_slider_flo_interactive_300x250.swf" width="300" height="440"></object>
+      </p>
+      <p>
+        <!--<img src="http://placehold.it/300x440&text=[ad]" />-->
+        <object type="application/x-shockwave-flash" id="fm_yahoo_travel_03_1969176047" name="fm_yahoo_travel_03_1969176047" class="flashmovie" data="http://www.copyboost.com/wp-content/uploads/2010/02/yahoo_travel_03.swf" width="300" height="440"></object>
+      </p>
+    </aside>
+  </div>
